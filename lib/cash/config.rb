@@ -27,7 +27,7 @@ module Cash
       end
 
       def index(attributes, options = {})
-        options.assert_valid_keys(:ttl, :order, :limit, :buffer)
+        options.assert_valid_keys(:ttl, :order, :limit, :buffer, :order_column)
         (@cache_config.indices.unshift(Index.new(@cache_config, self, attributes, options))).uniq!
       end
 

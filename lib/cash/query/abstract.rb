@@ -1,7 +1,7 @@
 module Cash
   module Query
     class Abstract
-      delegate :with_exclusive_scope, :get, :table_name, :indices, :find_from_ids_without_cache, :cache_key, :columns_hash, :to => :@active_record
+      delegate :with_exclusive_scope, :get, :table_name, :indices, :find_from_ids_without_cache, :cache_key, :columns_hash, :logger, :to => :@active_record
 
       def self.perform(*args)
         new(*args).perform
@@ -24,6 +24,7 @@ module Cash
           misses, missed_keys, objects = hit_or_miss(cache_keys, index, get_options)
           format_results(cache_keys, choose_deserialized_objects_if_possible(missed_keys, cache_keys, misses, objects))
         else
+          logger.debug("---- UNCACHEABLE #{table_name} - #{find_options.inspect} - #{get_options.inspect} - #{@options1.inspect} - #{@options2.inspect}")
           uncacheable
         end
       end
@@ -94,7 +95,7 @@ module Cash
         when Hash
           conditions.to_a.collect { |key, value| [key.to_s, value] }
         when String
-          parse_indices_from_condition(conditions)
+          parse_indices_from_condition(conditions.gsub('1 = 1 AND ', '')) #ignore unnecessary conditions
         when Array
           parse_indices_from_condition(*conditions)
         when NilClass
