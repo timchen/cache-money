@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "cache-money"
-  s.version  = "0.2.6"
+  s.version  = "0.2.7"
   s.date     = "2009-08-10"
   s.summary  = "Write-through and Read-through Cacheing for ActiveRecord"
   s.email    = "ashley@ngmoco.com"
