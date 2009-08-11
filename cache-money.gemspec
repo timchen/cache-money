@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "cache-money"
-  s.version  = "0.2.5.1"
+  s.version  = "0.2.6"
   s.date     = "2009-08-10"
   s.summary  = "Write-through and Read-through Cacheing for ActiveRecord"
   s.email    = "ashley@ngmoco.com"
@@ -29,7 +29,9 @@ Gem::Specification.new do |s|
     "lib/cash/util/array.rb",
     "lib/cash/util/marshal.rb",
     "lib/cash/write_through.rb",
-    "lib/cache_money.rb"
+    "lib/cache_money.rb",
+    "rails/init.rb",
+    "init.rb"
   ]
   s.test_files = [
     "config/environment.rb",
