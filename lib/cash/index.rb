@@ -2,7 +2,7 @@ module Cash
   class Index
     attr_reader :attributes, :options
     delegate :each, :hash, :to => :@attributes
-    delegate :get, :set, :expire, :find_every_without_cache, :calculate_without_cache, :calculate_with_cache, :incr, :decr, :primary_key, :to => :@active_record
+    delegate :get, :set, :expire, :find_every_without_cache, :calculate_without_cache, :calculate_with_cache, :incr, :decr, :primary_key, :logger, :to => :@active_record
 
     DEFAULT_OPTIONS = { :ttl => 1.day }
 
@@ -64,6 +64,10 @@ module Cash
       def window
         limit && limit + buffer
       end
+      
+      def order_column
+        options[:order_column] || 'id'
+      end
     end
     include Attributes
 
@@ -73,7 +77,7 @@ module Cash
 
     def matches?(query)
       query.calculation? ||
-      (query.order == ['id', order] &&
+      (query.order == [order_column, order] &&
       (!limit || (query.limit && query.limit + query.offset <= limit)))
     end
 

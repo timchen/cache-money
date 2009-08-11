@@ -8,7 +8,7 @@ module Cash
 
     def cache_locally
       @remote_cache = LocalBuffer.new(original_cache = @remote_cache)
-      yield
+      yield if block_given?
     ensure
       @remote_cache = original_cache
     end
