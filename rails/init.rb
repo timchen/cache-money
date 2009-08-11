@@ -10,9 +10,9 @@ if memcache_config.nil? || memcache_config[:cache_money].nil?
 else
   require 'cache_money'
 
-  ##$memcache = Rails.cache
   memcache_config[:logger] = Rails.logger
   $memcache = MemCache.new(memcache_config[:servers], memcache_config)
+  # $memcache = Memcached::Rails.new(memcache_config['servers'], memcache_config)
 
   ActionController::Base.cache_store = :cache_money_mem_cache_store
   ActionController::Base.session_options[:cache] = $memcache if memcache_options[:sessions]

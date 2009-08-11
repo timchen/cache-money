@@ -6,6 +6,7 @@ require 'spec'
 require 'pp'
 require 'cache_money'
 require 'memcache'
+# require 'memcached'
 require File.join(dir, '../config/environment')
 
 Spec::Runner.configure do |config|
@@ -13,9 +14,9 @@ Spec::Runner.configure do |config|
   config.before :suite do
     load File.join(dir, "../db/schema.rb")
 
-    config = YAML.load(IO.read((File.expand_path(File.dirname(__FILE__) + "/../config/memcache.yml"))))['test']
-    $memcache = MemCache.new(config)
-    $memcache.servers = config['servers']
+    config = YAML.load(IO.read((File.expand_path(File.dirname(__FILE__) + "/../config/memcached.yml"))))['test']
+    $memcache = MemCache.new(config['servers'], config)
+    # $memcache = Memcached::Rails.new(config['servers'], config)
     $lock = Cash::Lock.new($memcache)
   end
 

@@ -14,7 +14,20 @@ module Cash
     end
 
     def method_missing(method, *args, &block)
-      @remote_cache.send(method, *args, &block)
+      autoload_missing_constants do
+        @remote_cache.send(method, *args, &block)
+      end
+    end
+    
+    def autoload_missing_constants
+      yield if block_given?
+    rescue ArgumentError, MemCache::MemCacheError => error
+      lazy_load ||= Hash.new { |hash, hash_key| hash[hash_key] = true; false }
+      if error.to_s[/undefined class|referred/] && !lazy_load[error.to_s.split.last.constantize]
+        retry
+      else
+        raise error
+      end
     end
   end
 
