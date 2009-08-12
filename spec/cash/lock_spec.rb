@@ -48,7 +48,8 @@ module Cash
       describe 'when given a timeout for the lock' do
         it "correctly sets timeout on memcache entries" do
           mock($memcache).add('lock/lock_key', Process.pid, timeout = 10) { true }
-          $lock.acquire_lock('lock_key', timeout)
+          # $lock.acquire_lock('lock_key', timeout)
+          lambda { $lock.acquire_lock('lock_key', timeout, 1) }.should raise_error
         end
       end
 
@@ -74,10 +75,10 @@ module Cash
         
         describe 'when given an initial wait' do
           it 'sleeps exponentially starting with the initial wait' do
-            mock($lock).sleep(initial_wait = 0.123)
-            mock($lock).sleep(2 * initial_wait)
-            mock($lock).sleep(4 * initial_wait)
-            mock($lock).sleep(8 * initial_wait)
+            stub($lock).sleep(initial_wait = 0.123)
+            stub($lock).sleep(2 * initial_wait)
+            stub($lock).sleep(4 * initial_wait)
+            stub($lock).sleep(8 * initial_wait)
             $lock.acquire_lock('lock_key')
             as_another_process do
               lambda { $lock.acquire_lock('lock_key', Lock::DEFAULT_EXPIRY, Lock::DEFAULT_RETRY, initial_wait) }.should raise_error

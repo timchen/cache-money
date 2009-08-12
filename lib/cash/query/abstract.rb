@@ -10,11 +10,11 @@ module Cash
       def initialize(active_record, options1, options2)
         @active_record, @options1, @options2 = active_record, options1, options2 || {}
 
-        if active_record.base_class != active_record
-          @options2[:conditions] = active_record.merge_conditions(
-            @options2[:conditions], { active_record.inheritance_column => active_record.to_s }
-          )
-        end
+        # if active_record.base_class != active_record
+        #   @options2[:conditions] = active_record.merge_conditions(
+        #     @options2[:conditions], { active_record.inheritance_column => active_record.to_s }
+        #   )
+        # end
       end
 
       def perform(find_options = {}, get_options = {})
@@ -61,9 +61,9 @@ module Cash
         return if partial_indices.include?(nil)
         attribute_value_pairs = partial_indices.sum.sort { |x, y| x[0] <=> y[0] }
 
-        attribute_value_pairs.each do |attribute_value_pair|
-          return false if attribute_value_pair.last.is_a?(Array)
-        end
+        # attribute_value_pairs.each do |attribute_value_pair|
+        #   return false if attribute_value_pair.last.is_a?(Array)
+        # end
 
         if index = indexed_on?(attribute_value_pairs.collect { |pair| pair[0] })
           if index.matches?(self)
