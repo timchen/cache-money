@@ -87,7 +87,11 @@ module Cash
       new_attribute_value_pairs = []
       @attributes.each do |name|
         new_value = object.attributes[name]
-        original_value = object.send("#{name}_was")
+        if object.changed.include? name
+          original_value = object.send("#{name}_was")
+        else
+          original_value = new_value
+        end
         old_attribute_value_pairs << [name, original_value]
         new_attribute_value_pairs << [name, new_value]
       end
