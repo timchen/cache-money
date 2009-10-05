@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     "lib/cash/util/marshal.rb",
     "lib/cash/write_through.rb",
     "lib/cache_money.rb",
+    "lib/memcached_wrapper.rb",
     "rails/init.rb",
     "init.rb"
   ]
@@ -51,6 +52,6 @@ Gem::Specification.new do |s|
   ]
   s.add_dependency("activerecord", [">= 2.2.0"])
   s.add_dependency("activesupport", [">= 2.2.0"])
-  s.add_dependency("memcache-client", [">= 1.7.4 "])
+  # s.add_dependency("memcache-client", [">= 1.7.4 "])
   # s.add_dependency("memcached", [">= 0.13"])
 end

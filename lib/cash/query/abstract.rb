@@ -10,6 +10,9 @@ module Cash
       def initialize(active_record, options1, options2)
         @active_record, @options1, @options2 = active_record, options1, options2 || {}
 
+        # if @options2.empty? and active_record.base_class != active_record
+        #   @options2 = { :conditions => { active_record.inheritance_column => active_record.to_s }}
+        # end
         # if active_record.base_class != active_record
         #   @options2[:conditions] = active_record.merge_conditions(
         #     @options2[:conditions], { active_record.inheritance_column => active_record.to_s }

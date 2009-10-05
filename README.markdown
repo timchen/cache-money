@@ -163,20 +163,41 @@ Place a YAML file in `config/memcached.yml` with contents like:
 
 Place this in `config/initializers/cache_money.rb`
 
-    require 'cache_money'
-    
-    config = YAML.load(IO.read(File.join(RAILS_ROOT, "config", "memcached.yml")))[RAILS_ENV]
-    $memcache = MemCache.new(config)
-    $memcache.servers = config['servers']
+	yml = YAML.load(IO.read(File.join(RAILS_ROOT, "config", "memcached.yml")))
+	config = yml[RAILS_ENV]
+	config.symbolize_keys! if config.respond_to?(:symbolize_keys!)
 
-    $local = Cash::Local.new($memcache)
-    $lock = Cash::Lock.new($memcache)
-    $cache = Cash::Transactional.new($local, $lock)
+	if defined?(DISABLE_CACHE_MONEY) || config.nil? || config[:cache_money].nil?
+	  class ActiveRecord::Base
+	    def self.index(*args)
+	    end
+	  end
+	else
+	  require 'cache_money'
 
-    class ActiveRecord::Base
-      is_cached :repository => $cache
-    end
+	  config[:logger] = Rails.logger
 
+	  # $memcache = MemCache.new(config['servers'], config)
+	  $memcache = MemcachedWrapper.new(config[:servers].gsub(' ', '').split(','), config)
+
+	  $local = Cash::Local.new($memcache)
+	  $lock = Cash::Lock.new($memcache)
+	  $cache = Cash::Transactional.new($local, $lock)
+
+	  class ActiveRecord::Base
+	    is_cached(:repository => $cache)
+
+	    def <=>(other)
+	      if self.id == other.id then 
+	        0
+	      else
+	        self.id < other.id ? -1 : 1
+	      end
+	    end
+	  end
+	end
+	
+	
 #### Step 2: Add indices to your ActiveRecord models ####
 
 Queries like `User.find(1)` will use the cache automatically. For more complex queries you must add indices on the attributes that you will query on. For example, a query like `User.find(:all, :conditions => {:name => 'bob'})` will require an index like:
