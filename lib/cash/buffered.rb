@@ -63,6 +63,7 @@ module Cash
     end
 
     def get_multi(*keys)
+      keys.flatten! # arg may be a single array, or multiple strings.
       values = keys.collect { |key| get(key) }
       keys.zip(values).to_hash
     end

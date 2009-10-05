@@ -287,7 +287,7 @@ module Cash
             @cache.set('key1', @value)
             @cache.set('key2', @value)
             @cache.get_multi('key1', 'key2').should == { 'key1' => @value, 'key2' => @value }
-            $memcache.get_multi('key1', 'key2').should == {}
+            $memcache.get_multi(['key1', 'key2']).should == {}
           end
         end
 

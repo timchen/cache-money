@@ -14,7 +14,7 @@ module Cash
           return {} if keys.empty?
 
           keys = keys.collect { |key| cache_key(key) }
-          hits = repository.get_multi(*keys)
+          hits = repository.get_multi(keys)
           if (missed_keys = keys - hits.keys).any?
             missed_values = block.call(missed_keys)
             hits.merge!(missed_keys.zip(Array(missed_values)).to_hash)

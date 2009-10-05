@@ -3,6 +3,7 @@ module Cash
     attr_accessor :servers
 
     def get_multi(*keys)
+      keys.flatten! # arg may be a single array, or multiple strings.
       slice(*keys).collect { |k,v| [k, Marshal.load(v)] }.to_hash
     end
 
