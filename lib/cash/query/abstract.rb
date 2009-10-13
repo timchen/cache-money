@@ -127,6 +127,8 @@ module Cash
 
       def indexed_on?(attributes)
         indices.detect { |index| index == attributes }
+      rescue NoMethodError
+        nil
       end
       alias_method :index_for, :indexed_on?
 
