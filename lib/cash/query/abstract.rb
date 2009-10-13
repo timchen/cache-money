@@ -43,6 +43,8 @@ module Cash
             ['id', :asc]
           end
         end
+      rescue TypeError
+        ['id', :asc]
       end
 
       def limit
