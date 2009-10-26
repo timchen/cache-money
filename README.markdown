@@ -143,7 +143,7 @@ Sometimes your code will request the same cache key twice in one request. You ca
 #### Step 1: Get the GEM ####
 
     % gem sources -a http://gems.github.com
-    % sudo gem install nkallen-cache-money
+    % sudo gem install ngmoco-cache-money
     
 #### Step 2: Configure MemCached.
 
@@ -161,7 +161,7 @@ Place a YAML file in `config/memcached.yml` with contents like:
        ....
 
 #### Step 3: `config/environment.rb` ####
- config.gem "ashleym1972-cache-money",
+ config.gem "ngmoco-cache-money",
    :lib => "cache_money",
    :source => 'http://gems.github.com',
    :version => '0.2.9'

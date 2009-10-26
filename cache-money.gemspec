@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name     = "cache-money"
   s.version  = "0.2.9"
-  s.date     = "2009-08-10"
+  s.date     = "2009-10-26"
   s.summary  = "Write-through and Read-through Cacheing for ActiveRecord"
-  s.email    = "ashley@ngmoco.com"
-  s.homepage = "http://github.com/ashleym1972/cache-money"
+  s.email    = "teamplatform@ngmoco.com"
+  s.homepage = "http://github.com/ngmoco/cache-money"
   s.description = "Cache utilities."
   s.has_rdoc = false
   s.authors  = ["Nick Kallen"]
