@@ -27,9 +27,13 @@ require 'cash/util/marshal'
 
 class ActiveRecord::Base
   def self.is_cached(options = {})
-    options.assert_valid_keys(:ttl, :repository, :version)
-    include Cash unless ancestors.include?(Cash)
-    Cash::Config.create(self, options)
+    if options == false
+      include NoCash
+    else
+      options.assert_valid_keys(:ttl, :repository, :version)
+      include Cash unless ancestors.include?(Cash)
+      Cash::Config.create(self, options)
+    end
   end
 end
 
@@ -58,6 +62,18 @@ module Cash
 
     def cacheable?(*args)
       true
+    end
+  end
+end
+module NoCash
+  def self.included(active_record_class)
+    active_record_class.class_eval do
+      extend ClassMethods
+    end
+  end
+  module ClassMethods
+    def cachable?(*args)
+      false
     end
   end
 end
