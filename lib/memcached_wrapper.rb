@@ -74,7 +74,6 @@ class MemcachedWrapper < ::Memcached
   rescue Memcached::NotStored
     not_stored
   rescue Memcached::Error
-    log_error($!)
     log_error($!) if logger
     not_stored
   end
