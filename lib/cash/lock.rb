@@ -2,8 +2,8 @@ module Cash
   class Lock
     class Error < RuntimeError; end
 
-    INITIAL_WAIT = 1
-    DEFAULT_RETRY = 5
+    INITIAL_WAIT = 2
+    DEFAULT_RETRY = 8
     DEFAULT_EXPIRY = 30
 
     def initialize(cache)
@@ -27,9 +27,9 @@ module Cash
       retries.times do |count|
         response = @cache.add("lock/#{key}", Process.pid, lock_expiry)
         return if response == "STORED\r\n"
-        raise Error if count == retries - 1
         exponential_sleep(count, initial_wait) unless count == retries - 1
       end
+      debug_lock(key)
       raise Error, "Couldn't acquire memcache lock for: #{key}"
     end
 
@@ -47,5 +47,10 @@ module Cash
       @cache.get("lock/#{key}") == Process.pid
     end
 
+    def debug_lock(key)
+      @cache.logger.warn("#{@cache.get("lock/#{key}")}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:warn)
+    rescue
+      @cache.logger.warn("#{$!}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:warn)
+    end
   end
 end
