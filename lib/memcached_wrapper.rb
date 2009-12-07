@@ -124,6 +124,7 @@ class MemcachedWrapper < ::Memcached
     super(key, ttl, !raw, &block)
     stored
   rescue Memcached::NotFound
+    logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
   rescue TypeError
     log_error($!) if logger
     delete(key)
@@ -138,6 +139,9 @@ class MemcachedWrapper < ::Memcached
   def get_multi(*keys)
     keys.flatten!
     super(keys, true)
+  rescue Memcached::NotFound
+    logger.debug("Memcached miss: #{keys.inspect}") if logger && @debug
+    {}
   rescue TypeError
     log_error($!) if logger
     keys.each { |key| delete(key) }
