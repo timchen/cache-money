@@ -201,6 +201,10 @@ class MemcachedWrapper < ::Memcached
     log_error($!) if logger
   end
 
+  def get_server_for_key(key, options = {})
+    server_by_key(key)
+  end
+
   alias :reset :quit
   alias :close :quit #nodoc
   alias :flush_all :flush
