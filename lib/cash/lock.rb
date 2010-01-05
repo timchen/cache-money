@@ -30,7 +30,7 @@ module Cash
         exponential_sleep(count, initial_wait) unless count == retries - 1
       end
       debug_lock(key)
-      raise Error, "Couldn't acquire memcache lock for: #{key}   server: #{get_server_for_key(key)}"
+      raise Error, "Couldn't acquire memcache lock for: #{key}   server: #{@cache.get_server_for_key(key)}"
     end
 
     def release_lock(key)
