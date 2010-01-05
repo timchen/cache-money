@@ -69,9 +69,12 @@ class MemcachedWrapper < ::Memcached
 
   # Wraps Memcached::Rails#add to return a text string - for cache money
   def add(key, value, ttl=@default_ttl, raw=false)
+    logger.debug("Memcached add: #{key.inspect}") if logger && @debug
     super(key, value, ttl, !raw)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     stored
   rescue Memcached::NotStored
+    logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
     not_stored
   rescue Memcached::Error
     log_error($!) if logger
@@ -79,9 +82,12 @@ class MemcachedWrapper < ::Memcached
   end
 
   def replace(key, value, ttl = @default_ttl, raw = false)
+    logger.debug("Memcached replace: #{key.inspect}") if logger && @debug
     super(key, value, ttl, !raw)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     stored
   rescue Memcached::NotStored
+    logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
     not_stored
   rescue Memcached::Error
     log_error($!) if logger
@@ -121,7 +127,9 @@ class MemcachedWrapper < ::Memcached
 
   # Wraps Memcached#cas so that it doesn't raise. Doesn't set anything if no value is present.
   def cas(key, ttl=@default_ttl, raw=false, &block)
+    logger.debug("Memcached cas: #{key.inspect}") if logger && @debug
     super(key, ttl, !raw, &block)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     stored
   rescue Memcached::NotFound
     logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
@@ -138,7 +146,10 @@ class MemcachedWrapper < ::Memcached
   
   def get_multi(*keys)
     keys.flatten!
-    super(keys, true)
+    logger.debug("Memcached get_multi: #{keys.inspect}") if logger && @debug
+    values = super(keys, true)
+    logger.debug("Memcached hit: #{keys.inspect}") if logger && @debug
+    values
   rescue Memcached::NotFound
     logger.debug("Memcached miss: #{keys.inspect}") if logger && @debug
     {}
@@ -153,7 +164,9 @@ class MemcachedWrapper < ::Memcached
   end
 
   def set(key, value, ttl=@default_ttl, raw=false)
+    logger.debug("Memcached set: #{key.inspect}") if logger && @debug
     super(key, value, ttl, !raw)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     stored
   rescue Memcached::Error
     log_error($!) if logger
@@ -161,27 +174,36 @@ class MemcachedWrapper < ::Memcached
   end
 
   def append(key, value)
+    logger.debug("Memcached append: #{key.inspect}") if logger && @debug
     super(key, value)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     stored
   rescue Memcached::NotStored
+    logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
     not_stored
   rescue Memcached::Error
     log_error($!) if logger
   end
 
   def prepend(key, value)
+    logger.debug("Memcached prepend: #{key.inspect}") if logger && @debug
     super(key, value)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     stored
   rescue Memcached::NotStored
+    logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
     not_stored
   rescue Memcached::Error
     log_error($!) if logger
   end
 
   def delete(key)
+    logger.debug("Memcached delete: #{key.inspect}") if logger && @debug
     super(key)
+    logger.debug("Memcached hit: #{key.inspect}") if logger && @debug
     deleted
   rescue Memcached::NotFound
+    logger.debug("Memcached miss: #{key.inspect}") if logger && @debug
     not_found
   rescue Memcached::Error
     log_error($!) if logger
