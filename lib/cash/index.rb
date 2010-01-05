@@ -179,7 +179,7 @@ module Cash
     end
 
     def remove_object_from_primary_key_cache(attribute_value_pairs, object)
-      set(cache_key(attribute_value_pairs), [], :ttl => ttl)
+      expire(cache_key(attribute_value_pairs))
     end
 
     def remove_object_from_cache(attribute_value_pairs, object)
@@ -189,7 +189,11 @@ module Cash
       object_to_remove = serialize_object(object)
       objects = cache_value - [object_to_remove]
       objects = resize_if_necessary(attribute_value_pairs, objects)
-      set(key, objects, :ttl => ttl)
+      if objects.size > 0
+        set(key, objects, :ttl => ttl)
+      else
+        expire(key)
+      end
     end
 
     def resize_if_necessary(attribute_value_pairs, objects)
