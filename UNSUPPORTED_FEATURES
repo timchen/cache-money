@@ -7,7 +7,6 @@
 * attr_readonly - no technical obstacle, just not yet supported
 * attributes before typecast behave unpredictably - hard to support
 * ActiveRecord::Rollback is unsupported - the exception gets swallowed so there isn't an opportunity to rollback the cache transaction - not hard to support
-* Named bind variables :conditions => ["name = :name", { :name => "37signals!" }] - not hard to support
 * printf style binds: :conditions => ["name = '%s'", "37signals!"] - not too hard to support
 * objects as attributes that are serialized. story.title = {:foo => :bar}; customer.balance = Money.new(...) - these could be coerced using Column#type_cast?
 

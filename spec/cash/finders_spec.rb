@@ -30,6 +30,14 @@ module Cash
               end
             end
 
+            describe '#find(:first, :conditions => [ "id = :id", { :id => story.id } ])' do
+              it "does not use the database" do
+                story = Story.create!
+                mock(Story.connection).execute.never
+                Story.find(:first, :conditions => [ "id = :id", { :id => story.id } ]).should == story
+              end
+            end
+
             describe "#find(:first, :conditions => 'id = ?')" do
               it "does not use the database" do
                 story = Story.create!

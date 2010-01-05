@@ -119,7 +119,15 @@ module Cash
         conditions.split(AND).inject([]) do |indices, condition|
           matched, table_name, column_name, sql_value = *(KEY_EQ_VALUE.match(condition))
           if matched
-            value = sql_value == '?' ? values.shift : columns_hash[column_name].type_cast(sql_value)
+            # value = sql_value == '?' ? values.shift : columns_hash[column_name].type_cast(sql_value)
+            if sql_value == '?'
+              value = values.shift
+            elsif sql_value[0..0] == ':' && values && values.count > 0 && values[0].is_a?(Hash)
+              symb  = sql_value[1..-1].to_sym
+              value = columns_hash[column_name].type_cast(values[0][symb])
+            else
+              value = columns_hash[column_name].type_cast(sql_value)
+            end
             indices << [column_name, value]
           else
             return nil
