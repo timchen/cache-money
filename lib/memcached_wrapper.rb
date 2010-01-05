@@ -10,14 +10,14 @@
 ####### they have MemCache installed (don't need the wrapper)
 if defined? MemCache
 
-Rails.logger.info("cache-money: MemCache installed")
+Rails.logger.info("cache-money: MemCache installed") if defined? Rails
 #TODO add logging?
 class MemcachedWrapper < ::MemCache
 end
 
 ########## they have Memcached installed (do need the wrapper)
 elsif defined? Memcached
-Rails.logger.info("cache-money: Memcached installed")
+Rails.logger.info("cache-money: Memcached installed") if defined? Rails
 
 class Memcached
   alias :get_multi :get #:nodoc:
@@ -258,5 +258,5 @@ private
   
 end
 else
-  Rails.logger.warn 'unable to determine memcache implementation'
+  Rails.logger.warn 'unable to determine memcache implementation' if defined? Rails
 end #include the wraper
