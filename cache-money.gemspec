@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name     = "ngmoco-cache-money"
-  s.version  = "0.2.9"
-  s.date     = "2009-10-26"
+  s.version  = "0.2.10"
+  s.date     = "2010-01-08"
   s.summary  = "Write-through and Read-through Cacheing for ActiveRecord"
   s.email    = "teamplatform@ngmoco.com"
   s.homepage = "http://github.com/ngmoco/cache-money"
   s.description = "Cache utilities."
   s.has_rdoc = false
-  s.authors  = ["Nick Kallen"]
+  s.authors  = ["Nick Kallen","Ashley Martens"]
   s.files    = [
     "README",
     "TODO",
