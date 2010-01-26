@@ -57,11 +57,13 @@ module Cash
       end
     end
 
-    def transaction_with_cache_transaction(&block)
+    def transaction_with_cache_transaction(*args)
       if cache_config
-        repository.transaction { transaction_without_cache_transaction(&block) }
+        transaction_without_cache_transaction(*args) do
+          repository.transaction { yield }
+        end
       else
-        transaction_without_cache_transaction(&block)
+        transaction_without_cache_transaction(*args)
       end
     end
 
