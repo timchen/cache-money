@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name     = "ngmoco-cache-money"
-  s.version  = "0.2.10"
-  s.date     = "2010-01-08"
+  s.version  = "0.2.11"
+  s.date     = "2010-04-13"
   s.summary  = "Write-through and Read-through Cacheing for ActiveRecord"
   s.email    = "teamplatform@ngmoco.com"
   s.homepage = "http://github.com/ngmoco/cache-money"
@@ -50,8 +50,8 @@ Gem::Specification.new do |s|
     "spec/cash/marshal_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.add_dependency("activerecord", [">= 2.2.0"])
-  s.add_dependency("activesupport", [">= 2.2.0"])
+  s.add_dependency("active_record", [">= 2.2.0"])
+  s.add_dependency("active_support", [">= 2.2.0"])
   # s.add_dependency("memcache-client", [">= 1.7.4 "])
   # s.add_dependency("memcached", [">= 0.13"])
 end
