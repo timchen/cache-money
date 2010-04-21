@@ -253,7 +253,8 @@ private
   end
 
   def log_error(err)
-    logger.error("#{err}: \n\t#{err.backtrace.join("\n\t")}") if logger
+    #logger.error("#{err}: \n\t#{err.backtrace.join("\n\t")}") if logger
+    logger.error("Memcached ERROR, #{err.class}: #{err}"  if logger
   end
   
 end
