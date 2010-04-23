@@ -21,13 +21,14 @@ module Cash
       end
 
       def perform(find_options = {}, get_options = {})
-        if cache_config = cacheable?(@options1, @options2, find_options)
+        # Applied path from JamesHarrison (http://gist.github.com/72487 line 16)
+        if @active_record != Delayed::Job and cache_config = cacheable?(@options1, @options2, find_options)
           cache_keys, index = cache_keys(cache_config[0]), cache_config[1]
 
           misses, missed_keys, objects = hit_or_miss(cache_keys, index, get_options)
           format_results(cache_keys, choose_deserialized_objects_if_possible(missed_keys, cache_keys, misses, objects))
         else
-          logger.debug("---- UNCACHEABLE #{table_name} - #{find_options.inspect} - #{get_options.inspect} - #{@options1.inspect} - #{@options2.inspect}") if logger
+          logger.debug("  \e[1;4;31mUNCACHEABLE\e[0m #{table_name} - #{find_options.inspect} - #{get_options.inspect} - #{@options1.inspect} - #{@options2.inspect}") if logger
           uncacheable
         end
       end
@@ -187,7 +188,7 @@ module Cash
 
       def find_from_keys(*missing_keys)
         missing_ids = Array(missing_keys).flatten.collect { |key| key.split('/')[2].to_i }
-        find_from_ids_without_cache(missing_ids, @options1)
+        find_from_ids_without_cache(missing_ids, {})
       end
     end
   end
