@@ -1,15 +1,13 @@
 dir = File.dirname(__FILE__)
 $LOAD_PATH.unshift "#{dir}/../lib"
 
-require 'rubygems'
+require File.join(dir, '../config/environment')
 require 'spec'
 require 'pp'
 require 'cache_money'
 #require 'memcache'
 require 'memcached'
 require 'memcached_wrapper'
-
-require File.join(dir, '../config/environment')
 
 Spec::Runner.configure do |config|
   config.mock_with :rr

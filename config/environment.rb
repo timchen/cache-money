@@ -1,3 +1,8 @@
+require 'rubygems'
+gem 'activesupport', '~> 2.3.0'
+gem 'activerecord', '~> 2.3.0'
+gem 'rspec', '>= 1.3.0'
+
 require 'active_record'
 
 ActiveRecord::Base.establish_connection(
