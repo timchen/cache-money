@@ -48,9 +48,9 @@ module Cash
     end
 
     def debug_lock(key)
-      @cache.logger.error("Cash::Lock[#{key}]: #{@cache.get("lock/#{key}")}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:error)
+      @cache.logger.warn("Cash::Lock[#{key}]: #{@cache.get("lock/#{key}")}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:warn)
     rescue
-      @cache.logger.error("#{$!}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:error)
+      @cache.logger.warn("#{$!}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:warn)
     end
   end
 end
