@@ -570,5 +570,9 @@ module Cash
         end
       end
     end
+
+    it "should have method_missing as a private method" do
+      Transactional.private_instance_methods.should include("method_missing")
+    end
   end
 end

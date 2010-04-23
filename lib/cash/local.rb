@@ -12,12 +12,6 @@ module Cash
     ensure
       @remote_cache = original_cache
     end
-
-    def method_missing(method, *args, &block)
-      autoload_missing_constants do
-        @remote_cache.send(method, *args, &block)
-      end
-    end
     
     def autoload_missing_constants
       yield if block_given?
@@ -27,6 +21,14 @@ module Cash
         retry
       else
         raise error
+      end
+    end
+
+    private
+    
+    def method_missing(method, *args, &block)
+      autoload_missing_constants do
+        @remote_cache.send(method, *args, &block)
       end
     end
   end
@@ -65,6 +67,8 @@ module Cash
       @local_cache.delete(key)
     end
 
+    private
+    
     def method_missing(method, *args, &block)
       @remote_cache.send(method, *args, &block)
     end
