@@ -30,7 +30,7 @@ module Cash
         exponential_sleep(count, initial_wait) unless count == retries - 1
       end
       debug_lock(key)
-      raise Error, "Couldn't acquire memcache lock for: #{key}   server: #{@cache.get_server_for_key(key)}"
+      raise Error, "Couldn't acquire memcache lock for: #{key}   server: #{@cache.get_server_for_key("lock/#{key}")}"
     end
 
     def release_lock(key)
@@ -48,9 +48,9 @@ module Cash
     end
 
     def debug_lock(key)
-      @cache.logger.warn("#{@cache.get("lock/#{key}")}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:warn)
+      @cache.logger.error("Cash::Lock[#{key}]: #{@cache.get("lock/#{key}")}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:error)
     rescue
-      @cache.logger.warn("#{$!}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:warn)
+      @cache.logger.error("#{$!}") if @cache.respond_to?(:logger) && @cache.logger.respond_to?(:error)
     end
   end
 end
