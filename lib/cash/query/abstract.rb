@@ -123,11 +123,15 @@ module Cash
             # value = sql_value == '?' ? values.shift : columns_hash[column_name].type_cast(sql_value)
             if sql_value == '?'
               value = values.shift
-            elsif sql_value[0..0] == ':' && values && values.count > 0 && values[0].is_a?(Hash)
-              symb  = sql_value[1..-1].to_sym
-              value = columns_hash[column_name].type_cast(values[0][symb])
             else
-              value = columns_hash[column_name].type_cast(sql_value)
+              column = columns_hash[column_name]
+              raise "could not find column #{column_name} in columns #{columns_hash.keys.join(',')}" if column.nil?
+              if sql_value[0..0] == ':' && values && values.count > 0 && values[0].is_a?(Hash)
+                symb  = sql_value[1..-1].to_sym
+                value = column.type_cast(values[0][symb])
+              else
+                value = column.type_cast(sql_value)
+              end
             end
             indices << [column_name, value]
           else
