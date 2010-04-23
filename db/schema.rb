@@ -9,4 +9,10 @@ ActiveRecord::Schema.define(:version => 2) do
     t.integer "story_id"
     t.string "name"
   end
+  
+  create_table :sessions, :force => true do |t|
+    t.string :session_id
+    t.text   :data
+    t.timestamps
+  end
 end

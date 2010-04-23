@@ -15,8 +15,11 @@ module Cash
     module ClassMethods
       def self.extended(a_class)
         class << a_class
-          attr_reader :cache_config
-          delegate :repository, :indices, :to => :@cache_config
+          def cache_config
+            @cache_config ? @cache_config : superclass.cache_config
+          end
+          
+          delegate :repository, :indices, :to => :cache_config
           alias_method_chain :inherited, :cache_config
         end
       end

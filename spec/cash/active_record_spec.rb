@@ -207,5 +207,18 @@ module Cash
         end
       end
     end
+    
+    describe 'loading' do
+      it "should be able to create a record for an ar subclass that was loaded before cache money" do
+        $debug = true
+        session = ActiveRecord::SessionStore::Session.new
+        session.session_id = "12345"
+        session.data = "foobarbaz"
+
+        lambda {
+          session.save!
+        }.should_not raise_error
+      end
+    end
   end
 end
