@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name     = "ngmoco-cache-money"
-  s.version  = "0.2.11"
-  s.date     = "2010-04-13"
+  s.version  = "0.2.12"
+  s.date     = "2010-04-23"
   s.summary  = "Write-through and Read-through Cacheing for ActiveRecord"
   s.email    = "teamplatform@ngmoco.com"
   s.homepage = "http://github.com/ngmoco/cache-money"
