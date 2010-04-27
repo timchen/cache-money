@@ -22,7 +22,6 @@ module Cash
         $memcache.get("lock/lock_key").should == nil
         $lock.synchronize('lock_key') {}
         $memcache.get("lock/lock_key").should == nil
-
       end
 
       it "releases the lock even if the block raises" do
@@ -47,7 +46,7 @@ module Cash
 
       describe 'when given a timeout for the lock' do
         it "correctly sets timeout on memcache entries" do
-          mock($memcache).add('lock/lock_key', Process.pid, timeout = 10) { true }
+          mock($memcache).add('lock/lock_key', "#{Socket.gethostname} #{Process.pid}", timeout = 10) { true }
           # $lock.acquire_lock('lock_key', timeout)
           lambda { $lock.acquire_lock('lock_key', timeout, 1) }.should raise_error
         end
@@ -66,7 +65,7 @@ module Cash
           it "retries specified number of times" do
             $lock.acquire_lock('lock_key')
             as_another_process do
-              mock($memcache).add("lock/lock_key", Process.pid, timeout = 10) { false }.times(retries = 3)
+              mock($memcache).add("lock/lock_key", "#{Socket.gethostname} #{Process.pid}", timeout = 10) { false }.times(retries = 3)
               stub($lock).exponential_sleep
               lambda { $lock.acquire_lock('lock_key', timeout, retries) }.should raise_error
             end
