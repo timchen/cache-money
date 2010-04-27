@@ -10,7 +10,6 @@ rescue LoadError
   end
 end
 
-require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
