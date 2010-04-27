@@ -10,10 +10,14 @@ rescue LoadError
   end
 end
 
-require 'rake/testtask'
-require 'rake/rdoctask'
-
-require 'spec/rake/spectask'
+begin
+  require 'rake/testtask'
+  require 'rake/rdoctask'
+  require 'spec/rake/spectask'
+rescue MissingSourceFile
+  STDERR.puts "Error, could not load rake/rspec tasks! (#{$!})\n\nDid you run `bundle install`?\n\n"
+  exit 1
+end
 
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
