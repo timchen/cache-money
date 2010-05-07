@@ -26,7 +26,7 @@ end
 class MemcachedWrapper < ::Memcached
   DEFAULTS = { :servers => '127.0.0.1:11211' }
 
-  attr_reader :logger
+  attr_reader :logger, :default_ttl
 
   # See Memcached#new for details.
   def initialize(*args)

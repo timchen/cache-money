@@ -55,7 +55,7 @@ module Cash
       end
 
       def ttl
-        @options[:ttl] || 0
+        @ttl ||= @options[:ttl] || repository.default_ttl || 1.day
       end
 
       def version

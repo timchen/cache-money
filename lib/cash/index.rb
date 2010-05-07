@@ -7,6 +7,7 @@ module Cash
     DEFAULT_OPTIONS = { :ttl => 1.day }
 
     def initialize(config, active_record, attributes, options = {})
+      DEFAULT_OPTIONS[:ttl] = config.ttl || DEFAULT_OPTIONS[:ttl]
       @config, @active_record, @attributes, @options = config, active_record, Array(attributes).collect(&:to_s).sort, DEFAULT_OPTIONS.merge(options)
     end
 
