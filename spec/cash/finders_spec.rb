@@ -362,7 +362,7 @@ module Cash
           end
         end
 
-        describe '#find(:all, :order => ...)' do
+        describe '#find(:all, :conditions => ..., :order => ...)' do
           before(:each) do
             @short1 = Short.create(:title => 'title',
               :subtitle => 'subtitle')
@@ -382,7 +382,7 @@ module Cash
               [@short2.id, @short1.id]
           end
 
-          it 'should find objects in the correct order' do
+          it 'finds objects in the correct order' do
             Short.find(:all, :conditions => { :subtitle => @short1.subtitle },
               :order => 'title').map(&:id).should == [@short2.id, @short1.id]
           end
