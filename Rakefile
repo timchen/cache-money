@@ -19,6 +19,10 @@ rescue MissingSourceFile
   exit 1
 end
 
+$LOAD_PATH.unshift 'lib'
+
+require 'cash/version'
+
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = ['--format', 'profile', '--color']
@@ -38,4 +42,17 @@ namespace :britt do
   task :space do
     sh %{find . -name '*.rb' -exec sed -i '' 's/ *$//g' {} \\;}
   end
+end
+
+desc "Build a gem"
+task :gem => [ :spec, :build ]
+
+
+desc "Push a new version to Gemcutter"
+task :publish => [ :spec, :build ] do
+  system "git tag v#{Cash::Version}"
+  system "git push origin v#{Cash::Version}"
+  system "git push origin master"
+  system "gem push pkg/ngmoco-cache-money-#{Cash::Version}.gem"
+  system "git clean -fd"
 end
