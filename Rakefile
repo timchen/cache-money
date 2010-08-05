@@ -4,7 +4,7 @@ rescue LoadError
   begin
     require 'rubygems'
     require 'bundler'
-    Bundler.setup
+    Bundler.require
   rescue
     require File.expand_path('../config/environment', __FILE__)
   end
@@ -19,9 +19,31 @@ rescue MissingSourceFile
   exit 1
 end
 
-$LOAD_PATH.unshift 'lib'
-
-require 'cash/version'
+Jeweler::Tasks.new do |gem|
+  gem.name = "ngmoco-cache-money"
+  gem.summary = "Write-through and Read-through Cacheing for ActiveRecord"
+  gem.description = "Write-through and Read-through Cacheing for ActiveRecord"
+  gem.email = "teamplatform@ngmoco.com"
+  gem.homepage = "http://github.com/ngmoco/cache-money"
+  gem.authors = ["Nick Kallen","Ashley Martens","Scott Mace","John Markos"]
+  gem.has_rdoc = false
+  gem.files    = FileList[
+    "README",
+    "TODO",
+    "UNSUPPORTED_FEATURES",
+    "lib/**/*.rb",
+    "rails/init.rb",
+    "init.rb"
+  ]
+  gem.test_files = FileList[
+    "config/*",
+    "db/schema.rb",
+    "spec/**/*.rb"
+  ]
+  gem.add_dependency("activerecord", [">= 2.2.0"])
+  gem.add_dependency("activesupport", [">= 2.2.0"])
+end
+Jeweler::GemcutterTasks.new
 
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
@@ -43,9 +65,6 @@ namespace :britt do
     sh %{find . -name '*.rb' -exec sed -i '' 's/ *$//g' {} \\;}
   end
 end
-
-desc "Build a gem"
-task :gem => [ :spec, :build ]
 
 
 desc "Push a new version to Gemcutter"
