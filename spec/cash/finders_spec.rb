@@ -350,8 +350,8 @@ module Cash
           it 'populates the cache when finding by non-primary-key attribute' do
             Story.find_by_title(@story.title)  # populates cache for id with record
             
-            mock(Story.connection).execute.never
-            Story.find_by_title(@story.title).id.should == @story.id  # should hit cache only
+            mock(Story.connection).execute.never  # should hit cache only
+            Story.find_by_title(@story.title).id.should == @story.id
           end
         end
 
