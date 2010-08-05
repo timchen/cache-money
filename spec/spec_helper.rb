@@ -40,6 +40,11 @@ Spec::Runner.configure do |config|
       index :published
     end
 
+    Short = Class.new(Story)
+    Short.class_eval do
+      index :subtitle, :order_column => 'title'
+    end
+
     Epic = Class.new(Story)
     Oral = Class.new(Epic)
 
