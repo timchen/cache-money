@@ -362,6 +362,32 @@ module Cash
           end
         end
 
+        describe '#find(:all, :order => ...)' do
+          before(:each) do
+            @short1 = Short.create(:title => 'title',
+              :subtitle => 'subtitle')
+            @short2 = Short.create(:title => 'another title',
+              :subtitle => 'subtitle')
+            $memcache.flush_all
+            Short.find(:all, :conditions => { :subtitle => @short1.subtitle },
+              :order => 'title')
+          end
+
+          it 'populates the cache' do
+            Short.fetch("subtitle/subtitle").should_not be_blank
+          end
+
+          it 'returns objects in the correct order' do
+            Short.fetch("subtitle/subtitle").should ==
+              [@short2.id, @short1.id]
+          end
+
+          it 'should find objects in the correct order' do
+            Short.find(:all, :conditions => { :subtitle => @short1.subtitle },
+              :order => 'title').map(&:id).should == [@short2.id, @short1.id]
+          end
+        end
+
         describe '#find(1)' do
           it 'populates the cache' do
             Story.find(@story.id)
