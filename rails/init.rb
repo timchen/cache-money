@@ -31,7 +31,12 @@ else
   $cache = Cash::Transactional.new($local, $lock)
 
   # allow setting up caching on a per-model basis
-  unless memcache_config[:automatic_caching].to_s == 'false'
+  if memcache_config[:automatic_caching].to_s == 'false'
+    Rails.logger.info "cache-money: global model caching disabled"
+    class ActiveRecord::Base
+      is_cached(false)
+    end
+  else
     Rails.logger.info "cache-money: global model caching enabled"
     class ActiveRecord::Base
       is_cached(:repository => $cache)
