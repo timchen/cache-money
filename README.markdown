@@ -160,13 +160,24 @@ Place a YAML file in `config/memcached.yml` with contents like:
     development: 
        ....
 
-#### Step 3: `config/environment.rb` ####
+#### Step 3a: `config/environment.rb` ####
  config.gem "ngmoco-cache-money",
    :lib => "cache_money",
    :source => 'http://gems.github.com',
-   :version => '0.2.9'
+   :version => '0.3.xx'
 
-#### Step 4: Add indices to your ActiveRecord models ####
+#### Step 3b: `Gemfile` ####
+  gem 'memcached'
+  gem 'ngmoco-cache-money', :require => 'cache_money'
+
+#### Step 4: `config/initializers/cache_money.rb` ####
+  yml = YAML.load(IO.read(File.join(::Rails.root.to_s, "config", "memcached.yml")))
+  config = yml[::Rails.env]
+  config.symbolize_keys! if config.respond_to?(:symbolize_keys!)
+
+  CacheMoney.init(config) if config
+
+#### Step 5: Add indices to your ActiveRecord models ####
 
 Queries like `User.find(1)` will use the cache automatically. For more complex queries you must add indices on the attributes that you will query on. For example, a query like `User.find(:all, :conditions => {:name => 'bob'})` will require an index like:
 
@@ -184,27 +195,27 @@ For queries on multiple attributes, combination indexes are necessary. For examp
 
 There may be times where you only want to cache some of your models instead of everything.
 
-In that case, you can omit the following from your `config/initializers/cache_money.rb`
+In that case, you can change `config/memcached.rb`
 
-	class ActiveRecord::Base
-	  is_cached :repository => $cache
-	end
-		
-After that is removed, you can simple put this at the top of your models you wish to cache:
+	automatic_caching: 'false'
+	
+After that is set, you can simple put this at the top of your models you wish to cache:
 
-	is_cached :repository => $cache
+	is_cached :repository => $cache if $cache
 
 Just make sure that you put that line before any of your index directives.
 
 ## Version ##
 
-WARNING: This is currently a RELEASE CANDIDATE. A version of this code is in production use at Twitter but the extraction and refactoring process may have introduced bugs and/or performance problems. There are no known major defects at this point, but still.
+WARNING: This is currently a RELEASE CANDIDATE. A version of this code is in production use at ngmoco but the extraction and refactoring process may have introduced bugs and/or performance problems. There are no known major defects at this point, but still.
 
 ## Acknowledgments ##
 
 Thanks to
 
  * Twitter for commissioning the development of this library and supporting the effort to open-source it.
- * Sam Luckenbill for pairing with me on most of the hard stuff.
+ * Sam Luckenbill for pairing with Nick Allen on most of the hard stuff.
  * Matthew and Chris for pairing a few days, offering useful feedback on the readability of the code, and the initial implementation of the Memcached mock.
  * Evan Weaver for helping to reason-through software and testing strategies to deal with replication lag, and the initial implementation of the Memcached lock.
+ * Scott Mace for fixing this thing under battle conditions.
+ * John O'Neill for adding much needed test cases.
