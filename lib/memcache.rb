@@ -23,7 +23,7 @@ class Memcached
   alias :get_multi :get #:nodoc:
 end
 
-class MemcachedWrapper < ::Memcached
+class MemCache < ::Memcached
   DEFAULTS = { :servers => '127.0.0.1:11211' }
 
   attr_reader :logger, :default_ttl

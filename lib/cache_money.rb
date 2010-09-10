@@ -24,8 +24,10 @@ require 'cash/util/array'
 require 'cash/util/marshal'
 
 class ActiveRecord::Base
+  is_cached(:repository => $cache) if $cache
+
   def self.is_cached(options = {})
-    if options == false
+    unless @@global_write_cache
       include NoCash
     else
       options.assert_valid_keys(:ttl, :repository, :version)
@@ -73,6 +75,7 @@ module Cash
     end
   end
 end
+
 module NoCash
   def self.included(active_record_class)
     active_record_class.class_eval do
@@ -82,6 +85,30 @@ module NoCash
   module ClassMethods
     def cachable?(*args)
       false
+    end
+  end
+end
+
+module CacheMoney
+  def self.init(servers, options)
+    require 'memcache'
+    
+    options[:logger] = Rails.logger if defined?(Rails) && Rails.logger
+    servers = 
+      case servers.class.to_s
+        when "String"; servers.gsub(' ', '').split(',')
+        when "Array"; servers
+      end
+    memcache = MemCache.new(servers, options)
+
+    local = Cash::Local.new(memcache)
+    lock  = Cash::Lock.new(memcache)
+    $cache = Cash::Transactional.new(local, lock)
+
+    # allow setting up caching on a per-model basis
+    Rails.logger.info "cache-money: global model caching #{options[:automatic_caching].to_s == 'false' ? 'disabled' : 'enabled'}" if defined?(Rails) && Rails.logger
+    ActiveRecord::Base.class_eval do
+      class_variable_set(:@@global_write_cache, !(options[:automatic_caching].to_s == 'false'))
     end
   end
 end
