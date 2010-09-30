@@ -1,23 +1,11 @@
-# require 'memcache'
-# require 'memcached'
-
-#typically MemCache/Memcached can be used via the following in rails/init.rb:
-#$memcache = MemCache.new(memcache_config[:servers].gsub(' ', '').split(','), memcache_config)
-#$memcache = Memcached::Rails.new(memcache_config[:servers].gsub(' ', '').split(','), memcache_config)
-
-#this wrapper lets both work.
-
 ####### they have MemCache installed (don't need the wrapper)
 if defined? MemCache
 
-Rails.logger.info("cache-money: MemCache installed") if defined? Rails
-#TODO add logging?
-class MemcachedWrapper < ::MemCache
-end
+Rails.logger.info("cache-money: MemCache installed") if defined?(Rails) && Rails.logger
 
 ########## they have Memcached installed (do need the wrapper)
 elsif defined? Memcached
-Rails.logger.info("cache-money: Memcached installed") if defined? Rails
+Rails.logger.info("cache-money: Memcached installed") if defined?(Rails) && Rails.logger
 
 class Memcached
   alias :get_multi :get #:nodoc:
@@ -28,6 +16,10 @@ class MemCache < ::Memcached
 
   attr_reader :logger, :default_ttl
 
+  def inspect
+    "#<MemCachedWrapper: #{servers} #{@options.inspect}>"
+  end
+  
   # See Memcached#new for details.
   def initialize(*args)
       opts = DEFAULTS.merge(args.last.is_a?(Hash) ? args.pop : {})
