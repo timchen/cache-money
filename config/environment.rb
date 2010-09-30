@@ -1,9 +1,9 @@
 require 'rubygems'
-gem 'activesupport', '~> 2.3.0'
-gem 'activerecord', '~> 2.3.0'
-gem 'actionpack', '~> 2.3.0'
+gem 'activerecord',  '>= 3.0.0'
+gem 'activesupport', '>= 3.0.0'
+gem 'actionpack'
 gem 'rspec', '>= 1.3.0'
-gem 'jeweler', '~> 1.4.0'
+gem 'jeweler', '>= 1.4.0'
 
 require 'action_controller'
 require 'active_record'
