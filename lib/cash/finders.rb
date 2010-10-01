@@ -9,12 +9,14 @@ module Cash
     module ClassMethods
       def self.extended(active_record_class)
         class << active_record_class
-          alias_method_chain :find_every, :cache if respond_to?(:find_every)
-          alias_method_chain :find_from_ids, :cache if respond_to?(:find_from_ids)
-          alias_method_chain :calculate, :cache
-          alias_method_chain :find_some, :cache if respond_to?(:find_some)
-          alias_method_chain :find_with_ids, :cache if respond_to?(:find_with_ids)
+          alias_method_chain :relation, :cache
         end
+      end
+
+      def relation_with_cache #:nodoc:
+        @relation ||= ActiveRecord::Relation.new(self, arel_table)
+        @relation.is_cached = true
+        relation_without_cache
       end
 
       def without_cache(&block)
@@ -22,28 +24,30 @@ module Cash
       end
 
       # User.find(:first, ...), User.find_by_foo(...), User.find(:all, ...), User.find_all_by_foo(...)
-      def find_every_with_cache(options)
+      def find_with_cache(options)
         Query::Select.perform(self, options, scope(:find))
       end
 
+      def find_every_without_cache(*args)
+        find_without_cache(:all, *args)
+      end
+      
+      def find_without_cache(*args)
+        find(*args)
+      end
+      
       # User.find(1), User.find(1, 2, 3), User.find([1, 2, 3]), User.find([])
       def find_from_ids_with_cache(ids, options)
-        Query::PrimaryKey.perform(self, ids, options, scope(:find))
-      end
-
-      # User.find(1), User.find(1, 2, 3), User.find([1, 2, 3]), User.find([])
-      def find_with_ids_with_cache(ids, options)
-        Query::PrimaryKey.perform(self, ids, options, scope(:find))
-      end
-
-      # User.find(1), User.find(1, 2, 3), User.find([1, 2, 3]), User.find([])
-      def find_some_with_cache(ids, options)
         Query::PrimaryKey.perform(self, ids, options, scope(:find))
       end
 
       # User.count(:all), User.count, User.sum(...)
       def calculate_with_cache(operation, column_name, options = {})
         Query::Calculation.perform(self, operation, column_name, options, scope(:find))
+      end
+      
+      def calculate_without_cache(*args)
+        calculate(*args)
       end
     end
   end
