@@ -30,6 +30,9 @@ Spec::Runner.configure do |config|
     }
     $memcache = MemCache.new(config["servers"].gsub(' ', '').split(','), config)
     $lock = Cash::Lock.new($memcache)
+    
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    ActiveRecord::Base.logger.level = Logger::DEBUG
   end
 
   config.before :each do
