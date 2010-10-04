@@ -75,6 +75,7 @@ module Cash
       perform_commands
     ensure
       @buffer = {}
+      sorted_keys = [] unless sorted_keys
       sorted_keys.each do |key|
         @lock.release_lock(key)
       end
