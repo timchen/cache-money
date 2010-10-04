@@ -8,12 +8,17 @@ module Cash
     end
 
     module ClassMethods
+      def cache_log(message)
+        ActiveRecord::Base.logger.debug("  CACHE #{message}") if ActiveRecord::Base.logger
+      end
+      
       def fetch(keys, options = {}, &block)
         case keys
         when Array
           return {} if keys.empty?
           
           keys = keys.collect { |key| cache_key(key) }
+          cache_log("GET_MULTI   #{keys.inspect}")
           hits = repository.get_multi(*keys)
           if (missed_keys = keys - hits.keys).any?
             missed_values = block.call(missed_keys)
@@ -21,6 +26,7 @@ module Cash
           end
           hits
         else
+          cache_log("GET   #{cache_key(keys).inspect}")
           repository.get(cache_key(keys), options[:raw]) || (block ? block.call : nil)
         end
       end
@@ -40,12 +46,14 @@ module Cash
       end
 
       def add(key, value, options = {})
+        cache_log("ADD   #{cache_key(key)} = #{value.inspect}   (#{options[:ttl] || cache_config.ttl}, #{options[:raw]})")
         if repository.add(cache_key(key), value, options[:ttl] || cache_config.ttl, options[:raw]) == "NOT_STORED\r\n"
           yield if block_given?
         end
       end
 
       def set(key, value, options = {})
+        cache_log("SET   #{cache_key(key)} = #{value.inspect}   (#{options[:ttl] || cache_config.ttl}, #{options[:raw]})")
         repository.set(cache_key(key), value, options[:ttl] || cache_config.ttl, options[:raw])
       end
 
