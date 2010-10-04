@@ -180,7 +180,7 @@ module Cash
           objects
         else
           cache_keys = objects.collect { |id| "id/#{id}" }
-          objects = get(cache_keys, &method(:find_from_keys))
+          with_exclusive_scope(:find => {}) { objects = get(cache_keys, &method(:find_from_keys)) }
           convert_to_array(cache_keys, objects)
         end
       end
