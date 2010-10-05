@@ -23,13 +23,14 @@ require 'cash/query/calculation'
 require 'cash/util/array'
 require 'cash/util/marshal'
 
-require 'cash/cached_finder_methods'
+require 'cash/relation/cached_finder_methods'
 
 class ActiveRecord::Relation
-  include Cash::CachedFinderMethods
+  include Cash::Relation::CachedFinderMethods
 
   attr_accessor :is_cached
 
+  alias_method_chain :find_by_attributes, :cache
   alias_method_chain :find_one, :cache
   alias_method_chain :find_some, :cache
 end

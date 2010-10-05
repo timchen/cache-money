@@ -23,27 +23,12 @@ module Cash
         with_scope(:find => {:readonly => true}, &block)
       end
 
-      # User.find(:first, ...), User.find_by_foo(...), User.find(:all, ...), User.find_all_by_foo(...)
-      def find_with_cache(options)
-        Query::Select.perform(self, options, scope(:find))
-      end
-
       def find_every_without_cache(*args)
         find_without_cache(:all, *args)
       end
       
       def find_without_cache(*args)
         find(*args)
-      end
-      
-      # User.find(1), User.find(1, 2, 3), User.find([1, 2, 3]), User.find([])
-      def find_from_ids_with_cache(ids, options)
-        Query::PrimaryKey.perform(self, ids, options, scope(:find))
-      end
-
-      # User.count(:all), User.count, User.sum(...)
-      def calculate_with_cache(operation, column_name, options = {})
-        Query::Calculation.perform(self, operation, column_name, options, scope(:find))
       end
       
       def calculate_without_cache(*args)

@@ -73,10 +73,12 @@ module Cash
     include Attributes
 
     def serialize_object(object)
+      logger.debug("SERIALIZE OBJECT: #{object.inspect}")
       primary_key? ? object.shallow_clone : object.id
     end
 
     def matches?(query)
+      logger.debug("MATCHES: #{query.inspect}")
       query.calculation? ||
       (query.order == [order_column, order] &&
       (!limit || (query.limit && query.limit + query.offset <= limit)))
@@ -112,15 +114,18 @@ module Cash
     end
 
     def add_object_to_primary_key_cache(attribute_value_pairs, object)
+      logger.debug("add_object_to_primary_key_cache: #{attribute_value_pairs.inspect}      #{object.inspect}")
       set(cache_key(attribute_value_pairs), [serialize_object(object)], :ttl => ttl)
     end
 
     def cache_key(attribute_value_pairs)
+      # logger.debug("cache_key: #{attribute_value_pairs.inspect}")
       attribute_value_pairs.flatten.join('/')
     end
 
     def add_object_to_cache(attribute_value_pairs, object, overwrite = true)
       return if invalid_cache_key?(attribute_value_pairs)
+      logger.debug("add_object_to_cache: #{attribute_value_pairs.inspect}      #{object.inspect}")
 
       key, cache_value, cache_hit = get_key_and_value_at_index(attribute_value_pairs)
       if !cache_hit || overwrite
@@ -135,10 +140,12 @@ module Cash
     end
 
     def invalid_cache_key?(attribute_value_pairs)
+      # logger.debug("invalid_cache_key: #{attribute_value_pairs.inspect}")
       attribute_value_pairs.collect { |_,value| value }.any? { |x| x.nil? }
     end
 
     def get_key_and_value_at_index(attribute_value_pairs)
+      logger.debug("get_key_and_value_at_index: #{attribute_value_pairs.inspect}")
       key = cache_key(attribute_value_pairs)
       cache_hit = true
       cache_value = get(key) do
@@ -156,6 +163,7 @@ module Cash
     end
 
     def calculate_at_index(operation, attribute_value_pairs)
+      logger.debug("calculate_at_index: #{attribute_value_pairs.inspect}")
       conditions = attribute_value_pairs.to_hash_without_nils
       calculate_without_cache(operation, :all, :conditions => conditions)
     end

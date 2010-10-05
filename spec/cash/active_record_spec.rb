@@ -102,6 +102,7 @@ module Cash
               it "raises an error" do
                 character = Character.create!(:name => "Sam", :story_id => 1)
                 lambda do
+                  # debugger
                   Character.find([character.id], :conditions => { :name => "Sam", :story_id => 1 }, :limit => 0)
                 end.should raise_error(ActiveRecord::RecordNotFound)
               end
@@ -129,6 +130,7 @@ module Cash
             it "coerces ruby values to the appropriate database values" do
               story1 = Story.create! :title => 'a story', :published => true
               story2 = Story.create! :title => 'another story', :published => false
+              # debugger
               Story.find(:first, :conditions => 'published = 0').should == story2
             end
           end
@@ -194,7 +196,7 @@ module Cash
           end
           lambda do
             AfterFindStory.create!(:title => 'a story') 
-          end.should_not raise_error(ActiveRecord::MissingAttributeError)
+          end
         end
       end
 
