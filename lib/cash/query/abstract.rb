@@ -61,7 +61,7 @@ module Cash
 
       private
       def cacheable?(*optionss)
-        return false if @active_record.respond_to?(:cachable?) && ! @active_record.cachable?(*optionss)
+        return false if @active_record.respond_to?(:cacheable?) && ! @active_record.cacheable?(*optionss)
         optionss.each { |options| return unless safe_options_for_cache?(options) }
         partial_indices = optionss.collect { |options| attribute_value_pairs_for_conditions(options[:conditions]) }
         return if partial_indices.include?(nil)

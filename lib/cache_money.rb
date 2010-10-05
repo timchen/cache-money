@@ -79,7 +79,7 @@ module NoCash
     end
   end
   module ClassMethods
-    def cachable?(*args)
+    def cacheable?(*args)
       false
     end
   end
