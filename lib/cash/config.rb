@@ -55,7 +55,8 @@ module Cash
       end
 
       def ttl
-        @ttl ||= @options[:ttl] || repository.default_ttl || 1.day
+        repository_ttl = repository.respond_to?(:default_ttl) ? repository.default_ttl : nil
+        @ttl ||= @options[:ttl] || repository_ttl || 1.day
       end
 
       def version
