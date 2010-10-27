@@ -25,7 +25,7 @@ jt = Jeweler::Tasks.new do |gem|
   gem.description = "Write-through and Read-through Cacheing for ActiveRecord"
   gem.email = "teamplatform@ngmoco.com"
   gem.homepage = "http://github.com/ngmoco/cache-money"
-  gem.authors = ["Nick Kallen","Ashley Martens","Scott Mace","John Markos"]
+  gem.authors = ["Nick Kallen","Ashley Martens","Scott Mace","John O'Neill"]
   gem.has_rdoc = false
   gem.files    = FileList[
     "README",
