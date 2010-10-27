@@ -7,7 +7,6 @@
 
 #this wrapper lets both work.
 
-
 ########## they have Memcached installed (do need the wrapper)
 if defined? Memcached
 Rails.logger.info("cache-money: Memcached installed") if defined? Rails
@@ -257,10 +256,6 @@ elsif defined? MemCache
 Rails.logger.info("cache-money: MemCache installed") if defined? Rails
 #TODO add logging?
 class MemcachedWrapper < ::MemCache
-end
-
-class MemCache
-  alias :default_ttl :timeout
 end
 
 else
