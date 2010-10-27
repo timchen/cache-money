@@ -15,6 +15,10 @@ Rails.logger.info("cache-money: MemCache installed") if defined? Rails
 class MemcachedWrapper < ::MemCache
 end
 
+class MemCache
+  alias :default_ttl :timeout
+end
+
 ########## they have Memcached installed (do need the wrapper)
 elsif defined? Memcached
 Rails.logger.info("cache-money: Memcached installed") if defined? Rails
