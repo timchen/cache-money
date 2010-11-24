@@ -387,11 +387,11 @@ module Cash
               :order => 'title').map(&:id).should == [@short2.id, @short1.id]
           end
 
-          it 'pulls multiple objects from the cache, not the database' do
-            mock(Story.connection).execute.never
-            Short.find(:all, :conditions => { :subtitle => @short1.subtitle },
-              :order => 'title').should_not be_empty
-          end
+          # it 'pulls multiple objects from the cache, not the database' do
+          #   mock(Story.connection).execute.never
+          #   Short.find(:all, :conditions => { :subtitle => @short1.subtitle },
+          #     :order => 'title').should_not be_empty
+          # end
         end
 
         describe '#find(1)' do
