@@ -36,6 +36,17 @@ module Cash
               mock(Story.connection).execute.never
               story.characters.count(:all, :conditions => { :name => name }).should == characters.size
             end
+
+            it 'has correct counter cache' do
+              story = Story.create!
+              characters = [story.characters.create!(:name => name = 'name'), story.characters.create!(:name => name)]
+              $memcache.flush_all
+              story.characters.find(:all, :conditions => { :name => name }) == characters
+              story.characters.count(:all, :conditions => { :name => name }).should == characters.size
+              story.characters.find(:all, :conditions => { :name => name }) == characters
+              mock(Story.connection).execute.never
+              story.characters.count(:all, :conditions => { :name => name }).should == characters.size
+            end
           end
         end
       end
