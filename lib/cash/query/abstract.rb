@@ -88,7 +88,13 @@ module Cash
         if index = indexed_on?(attribute_value_pairs.collect { |pair| pair[0] })
           if index.matches?(self)
             [attribute_value_pairs, index]
+          else
+            logger.debug("  \e[1;4;31mUNCACHEABLE NO MATCHING INDEX\e[0m #{table_name} - #{index.order_column.inspect} #{index.order.inspect} #{index.limit.inspect}") if logger
+            false
           end
+        else
+          logger.debug("  \e[1;4;31mUNCACHEABLE NOT INDEXED\e[0m #{table_name} - #{attribute_value_pairs.collect { |pair| pair[0] }.inspect}") if logger
+          false
         end
       end
 
