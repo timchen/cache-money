@@ -61,8 +61,22 @@ module Cash
 
       private
       def cacheable?(*optionss)
-        return false if @active_record.respond_to?(:cacheable?) && ! @active_record.cacheable?(*optionss)
-        optionss.each { |options| return unless safe_options_for_cache?(options) }
+        if @active_record.respond_to?(:cacheable?) && ! @active_record.cacheable?(*optionss)
+          if logger
+            if @active_record.respond_to?(:cacheable?)
+              logger.debug("  \e[1;4;31mUNCACHEABLE CLASS\e[0m #{table_name}")
+            else
+              logger.debug("  \e[1;4;31mUNCACHEABLE INSTANCE\e[0m #{table_name} - #{optionss.inspect}")
+            end
+          end
+          return false
+        end
+        optionss.each do |options|
+          unless safe_options_for_cache?(options)
+            logger.debug("  \e[1;4;31mUNCACHEABLE UNSAFE\e[0m #{table_name} - #{options.inspect}") if logger
+            return false
+          end
+        end
         partial_indices = optionss.collect { |options| attribute_value_pairs_for_conditions(options[:conditions]) }
         return if partial_indices.include?(nil)
         attribute_value_pairs = partial_indices.sum.sort { |x, y| x[0] <=> y[0] }
