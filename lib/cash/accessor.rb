@@ -17,7 +17,9 @@ module Cash
           hits = repository.get_multi(*keys)
           if (missed_keys = keys - hits.keys).any?
             missed_values = block.call(missed_keys)
-            hits.merge!(missed_keys.zip(Array(missed_values)).to_hash_without_nils)
+            missed_records = missed_keys.zip(Array(missed_values)).to_hash_without_nils
+            missed_records.each { |key, value| repository.add(key, value, options[:ttl] || cache_config.ttl, options[:raw]) }
+            hits.merge!(missed_records)
           end
           hits
         else
