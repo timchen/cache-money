@@ -88,6 +88,21 @@ module Cash
           Story.get(cache_key).should == []
         end
 
+        it "updated the index caches with multiple ids on save" do
+          story_1 = Story.create!(:title => "I am delicious")
+          story_2 = Story.create!(:title => "I am tasty")
+          Story.get("id/#{story_1.id}").first.title.should == "I am delicious"
+          Story.get("id/#{story_2.id}").first.title.should == "I am tasty"
+          stories_1_and_2 = Story.find_all_by_id([story_1.id, story_2.id])
+          stories_1_and_2.map(&:title).should == ["I am delicious", "I am tasty"]
+          
+          story_1.title = "I am mouthwatering"
+          story_1.save!
+          Story.get("id/#{story_1.id}").first.title.should == "I am mouthwatering"
+          stories_1_and_2 = Story.find_all_by_id([story_1.id, story_2.id])
+          stories_1_and_2.map(&:title).should == ["I am mouthwatering", "I am tasty"]
+        end
+
         it 'increments/decrements the counts of affected indices' do
           story = Story.create!(:title => original_title = "I am delicious")
           story.update_attributes(:title => new_title = "I am fabulous")
