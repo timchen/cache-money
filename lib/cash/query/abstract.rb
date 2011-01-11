@@ -210,9 +210,7 @@ module Cash
         options = {}
         order_sql = @options1[:order] || @options2[:order]
         options[:order] = order_sql if order_sql
-        results = find_from_ids_without_cache(missing_ids, options)
-        results.each {|o| @active_record.add_to_caches(o) } if results && results.is_a?(Array)
-        results
+        find_from_ids_without_cache(missing_ids, options)
       end
     end
   end

@@ -401,22 +401,6 @@ module Cash
           end
         end
 
-        describe '#find([1, 2, ...])' do
-          before do
-            @short1 = Short.create(:title => 'title1', :subtitle => 'subtitle')
-            @short2 = Short.create(:title => 'title2', :subtitle => 'subtitle')
-            @short3 = Short.create(:title => 'title3', :subtitle => 'subtitle')
-            $memcache.flush_all
-          end
-
-          it 'populates the cache' do
-            Short.find(@short1.id, @short2.id, @short3.id) == [@short1, @short2, @short3]
-            Short.fetch("id/#{@short1.id}").should == [@short1]
-            Short.fetch("id/#{@short2.id}").should == [@short2]
-            Short.fetch("id/#{@short3.id}").should == [@short3]
-          end
-        end
-
         describe 'when there is a with_scope' do
           it "uses the database, not the cache" do
             Story.send :with_scope, :find => { :conditions => { :title => @story.title }} do

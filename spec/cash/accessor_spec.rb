@@ -44,6 +44,16 @@ module Cash
             }
           end
         end
+
+        describe "fetch([])" do
+          before do
+            Story.fetch(["yabba", "dabba"]) { |*missing_ids| ["doo", "doa"] }
+          end
+          it 'populates the cache' do
+            Story.fetch("yabba").should == "doo"
+            Story.fetch("dabba").should == "doa"
+          end
+        end
       end
     end
 
