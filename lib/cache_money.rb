@@ -59,8 +59,13 @@ module Cash
 
     def transaction_with_cache_transaction(*args)
       if cache_config
-        transaction_without_cache_transaction(*args) do
-          repository.transaction { yield }
+        # Wrap both the db and cache transaction in another cache transaction so that the cache 
+        # gets written only after the database commit but can still flush the inner cache
+        # transaction if an AR::Rollback is issued.
+        repository.transaction do
+          transaction_without_cache_transaction(*args) do
+            repository.transaction { yield }
+          end
         end
       else
         transaction_without_cache_transaction(*args)
