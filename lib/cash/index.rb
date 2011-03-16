@@ -4,7 +4,7 @@ module Cash
     delegate :each, :hash, :to => :@attributes
     delegate :get, :set, :expire, :find_every_without_cache, :calculate_without_cache, :calculate_with_cache, :incr, :decr, :primary_key, :logger, :to => :@active_record
 
-    DEFAULT_OPTIONS = { :ttl => 1.day }
+    DEFAULT_OPTIONS = { :ttl => 1.day.to_i }
 
     def initialize(config, active_record, attributes, options = {})
       DEFAULT_OPTIONS[:ttl] = config.ttl || DEFAULT_OPTIONS[:ttl]
