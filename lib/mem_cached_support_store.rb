@@ -126,7 +126,7 @@ require 'memcached'
 
       private
         def expires_in(options)
-          (options && options[:expires_in]) || 0
+          (options && options[:expires_in] && options[:expires_in].to_i) || 0
         end
 
         def marshal?(options)
