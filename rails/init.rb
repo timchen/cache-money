@@ -1,3 +1,5 @@
+require 'dalli'
+
 yml = YAML.load(IO.read(File.join(RAILS_ROOT, "config", "memcached.yml")))
 memcache_config = yml[RAILS_ENV]
 memcache_config.symbolize_keys! if memcache_config.respond_to?(:symbolize_keys!)
@@ -18,10 +20,12 @@ else
       when "String"; memcache_config[:servers].gsub(' ', '').split(',')
       when "Array"; memcache_config[:servers]
     end
-  $memcache = MemcachedWrapper.new(memcache_servers, memcache_config)
+  #$memcache = MemcachedWrapper.new(memcache_servers, memcache_config)
+  $memcache = Dalli::Client.new(memcache_config[:servers])
 
   #ActionController::Base.cache_store = :cache_money_mem_cache_store
   ActionController::Base.session_options[:cache] = $memcache if memcache_config[:sessions]
+  
   #silence_warnings {
   #  Object.const_set "RAILS_CACHE", ActiveSupport::Cache.lookup_store(:cache_money_mem_cache_store)
   #}
