@@ -42,6 +42,7 @@ jt = Jeweler::Tasks.new do |gem|
   ]
   gem.add_dependency("activerecord", [">= 2.2.0"])
   gem.add_dependency("activesupport", [">= 2.2.0"])
+  gem.add_dependency("dalli", [">= 1.0.3"])
 end
 Jeweler::GemcutterTasks.new
 
