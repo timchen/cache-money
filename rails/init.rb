@@ -1,5 +1,3 @@
-require 'dalli'
-
 yml = YAML.load(IO.read(File.join(RAILS_ROOT, "config", "memcached.yml")))
 memcache_config = yml[RAILS_ENV]
 memcache_config.symbolize_keys! if memcache_config.respond_to?(:symbolize_keys!)
