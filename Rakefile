@@ -23,9 +23,9 @@ jt = Jeweler::Tasks.new do |gem|
   gem.name = "timchen-cache-money"
   gem.summary = "Write-through and Read-through Cacheing for ActiveRecord"
   gem.description = "Write-through and Read-through Cacheing for ActiveRecord"
-  gem.email = "teamplatform@ngmoco.com"
+  gem.email = "tim@carwoo.com"
   gem.homepage = "http://github.com/timchen/cache-money"
-  gem.authors = ["Nick Kallen","Ashley Martens","Scott Mace","John O'Neill"]
+  gem.authors = ["Nick Kallen","Ashley Martens","Scott Mace","John O'Neill","Tim Chen"]
   gem.has_rdoc = false
   gem.files    = FileList[
     "README",
@@ -40,8 +40,8 @@ jt = Jeweler::Tasks.new do |gem|
     "db/schema.rb",
     "spec/**/*.rb"
   ]
-  gem.add_dependency("activerecord", [">= 2.2.0"])
-  gem.add_dependency("activesupport", [">= 2.2.0"])
+  gem.add_dependency("activerecord", ["= 2.3.8"])
+  gem.add_dependency("activesupport", ["= 2.3.8"])
   gem.add_dependency("dalli", [">= 1.0.3"])
 end
 Jeweler::GemcutterTasks.new
