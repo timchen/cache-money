@@ -19,7 +19,7 @@ else
       when "Array"; memcache_config[:servers]
     end
   #$memcache = MemcachedWrapper.new(memcache_servers, memcache_config)
-  $memcache = Dalli::Client.new(memcache_config[:servers])
+  $memcache = Dalli::Client.new(memcache_servers, memcache_config)
 
   #ActionController::Base.cache_store = :cache_money_mem_cache_store
   ActionController::Base.session_options[:cache] = $memcache if memcache_config[:sessions]
